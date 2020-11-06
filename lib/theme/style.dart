@@ -491,7 +491,7 @@ class Style {
       EdgeInsets.symmetric(horizontal: paddingMd);
   static const pickerActionFontSize = fontSizeMd;
   static const pickerActionTextColor = blue;
-  static const pickerOptionFontSize = fontSizeLg;
+  static const pickerOptionFontSize = fontSizeMd;
   static const pickerOptionTextColor = black;
   static const pickerLoadingIconColor = blue;
   static const pickerLoadingMaskColor = Colors.white70;
