@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_vant_kit/theme/style.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:multi_image_picker/multi_image_picker.dart';
 
 //照片墙
@@ -11,6 +12,9 @@ class ImageWall extends StatefulWidget {
 
   // 是否可以多选图片
   final bool multiple;
+
+  /// 图片是否仅支持摄像头拍摄
+  final bool onlyCamera;
 
   // 单行的图片数量
   final int length;
@@ -28,7 +32,7 @@ class ImageWall extends StatefulWidget {
   final Function(List<String> newImages) onChange;
 
   // 监听图片上传
-  final Future<List<String>> Function(List<Asset> file) onUpload;
+  final Future<List<String>> Function(ImageFiles files) onUpload;
 
   // 删除图片后的回调
   final Function(String removedUrl) onRemove;
@@ -36,6 +40,7 @@ class ImageWall extends StatefulWidget {
   const ImageWall({
     Key key,
     this.multiple: false,
+    this.onlyCamera: false,
     this.length: 4,
     this.count: 9,
     this.images,
@@ -53,6 +58,7 @@ class ImageWall extends StatefulWidget {
 class _ImageWall extends State<ImageWall> {
   List<String> images = [];
   double space = Style.imageWallItemGutter;
+  final picker = ImagePicker();
 
   @override
   Widget build(BuildContext context) {
@@ -131,22 +137,31 @@ class _ImageWall extends State<ImageWall> {
     return InkWell(
       child: widget.uploadBtn ?? btn,
       onTap: () async {
-        List<Asset> resultList = List<Asset>();
+        ImageFiles imageFiles = ImageFiles();
         try {
-          resultList = await MultiImagePicker.pickImages(
-            maxImages: widget.multiple ? widget.count - images.length : 1,
-            enableCamera: true,
-            cupertinoOptions: CupertinoOptions(takePhotoIcon: "chat"),
-            materialOptions: MaterialOptions(
-                startInAllView: true,
-                useDetailsView: true,
-                selectCircleStrokeColor: "#000000",
-                actionBarColor: "#000000"),
-          );
+          if (widget.onlyCamera) {
+            var result = await pickImageFromCamera();
+            if (result == null) {
+              return;
+            }
+            imageFiles.pickedFile = result;
+          } else {
+            List<Asset> resultList = await MultiImagePicker.pickImages(
+              maxImages: widget.multiple ? widget.count - images.length : 1,
+              enableCamera: true,
+              cupertinoOptions: CupertinoOptions(takePhotoIcon: "chat"),
+              materialOptions: MaterialOptions(
+                  startInAllView: true,
+                  useDetailsView: true,
+                  selectCircleStrokeColor: "#000000",
+                  actionBarColor: "#000000"),
+            );
+            imageFiles.assets = resultList;
+          }
         } on Exception catch (e) {
           print(e.toString());
         }
-        List<String> urls = await widget.onUpload(resultList);
+        List<String> urls = await widget.onUpload(imageFiles);
         if (urls == null || urls.isEmpty) {
           return;
         }
@@ -156,5 +171,18 @@ class _ImageWall extends State<ImageWall> {
         widget.onChange(images);
       },
     );
+  }
+
+  Future<PickedFile> pickImageFromCamera() async {
+    return await picker.getImage(source: ImageSource.camera);
+  }
+}
+
+class ImageFiles {
+  List<Asset> assets;
+  PickedFile pickedFile;
+
+  bool isEmpty() {
+    return (assets == null || assets.length == 0) && pickedFile == null;
   }
 }
