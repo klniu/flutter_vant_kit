@@ -20,7 +20,7 @@ class NDivider extends StatefulWidget {
   NDivider(
       {Key key,
       this.content,
-      this.fontColor: Style.dividerTextColor,
+      this.fontColor,
       this.fontSize: Style.dividerFontSize,
       this.lineColor,
       this.hairline: false,

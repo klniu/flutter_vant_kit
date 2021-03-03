@@ -6,28 +6,40 @@ import 'package:flutter_vant_kit/theme/style.dart';
 class Picker extends StatefulWidget {
   // 对象数组，配置每一列显示的数据
   final List<PickerItem> colums;
+
   // 是否显示顶部栏
   final bool showToolbar;
+
   // 顶部栏位置，可选值为bottom
   final String toolbarPosition;
+
   // 顶部栏标题
   final String title;
+
   // 是否显示加载状态
   final bool loading;
+
   // 选项高度
   final double itemHeight;
+
   // 确认按钮文字
   final String confirmButtonText;
+
   // 取消按钮文字
   final String cancelButtonText;
+
   // 默认选中项索引
   final dynamic defaultIndex;
+
   // 多列选择的列数
   final int level;
+
   // 点击取消按钮时触发
   final Function(List<String> selectedValues, dynamic selectedIndex) onCancel;
+
   // 点击完成按钮时触发
   final Function(List<String> selectedValues, dynamic selectedIndex) onConfirm;
+
   // 选项改变时触发
   final Function(List<String> selectedValues, dynamic selectedIndex) onChange;
 
@@ -62,8 +74,8 @@ class _Picker extends State<Picker> {
 
   @override
   void initState() {
-    scrollControllers = List.generate(widget.level,
-            (i) => FixedExtentScrollController());
+    scrollControllers =
+        List.generate(widget.level, (i) => FixedExtentScrollController());
 
     isMultiple = widget.level > 1;
     if (isMultiple) {
@@ -107,21 +119,17 @@ class _Picker extends State<Picker> {
             top: BorderSide(
                 width: widget.toolbarPosition == "bottom"
                     ? Style.borderWidthBase
-                    : 0.0,
-                color: Style.borderColor),
+                    : 0.0),
             bottom: BorderSide(
                 width: widget.toolbarPosition == "top"
                     ? Style.borderWidthBase
-                    : 0.0,
-                color: Style.borderColor)),
-        color: Style.pickerBackgroundColor,
+                    : 0.0)),
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: <Widget>[
           buildCancelButton(context),
-          Text("${widget.title ?? ''}",
-              style: TextStyle(fontSize: Style.pickerTitleFontSize)),
+          Text("${widget.title ?? ''}"),
           buildConfirmButton(context),
         ],
       ),
@@ -140,9 +148,7 @@ class _Picker extends State<Picker> {
           padding: Style.pickerActionPadding,
           alignment: AlignmentDirectional.center,
           child: Text("${widget.confirmButtonText}",
-              style: TextStyle(
-                  fontSize: Style.pickerActionFontSize,
-                  color: Style.pickerActionTextColor)),
+              style: TextStyle(fontSize: Style.pickerActionFontSize)),
         ),
       ),
     );
@@ -160,9 +166,7 @@ class _Picker extends State<Picker> {
           padding: Style.pickerActionPadding,
           alignment: AlignmentDirectional.center,
           child: Text("${widget.cancelButtonText}",
-              style: TextStyle(
-                  fontSize: Style.pickerActionFontSize,
-                  color: Style.pickerActionTextColor)),
+              style: TextStyle(fontSize: Style.pickerActionFontSize)),
         ),
       ),
     );
@@ -175,10 +179,7 @@ class _Picker extends State<Picker> {
       widgets.add(Container(
         height: widget.itemHeight,
         alignment: AlignmentDirectional.center,
-        child: Text('${item.text}',
-            style: TextStyle(
-                fontSize: Style.pickerOptionFontSize,
-                color: Style.pickerOptionTextColor)),
+        child: Text('${item.text}', style: TextStyle(fontSize: Style.pickerOptionFontSize)),
       ));
     }
     return widgets;
@@ -216,7 +217,6 @@ class _Picker extends State<Picker> {
         // 滚筒的曲率,就是弯曲的程度
         useMagnifier: false,
         magnification: 1.0,
-        backgroundColor: Style.pickerBackgroundColor,
         children: buildPickerItem(column),
       ),
     );

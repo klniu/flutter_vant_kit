@@ -19,7 +19,7 @@ class CellGroup extends StatelessWidget {
   buildItems(List list) {
     List<Widget> widgets = [];
     for (int i = 0; i < list.length; i++) {
-      widgets.add(list[i]);
+      widgets.add(Padding(padding: EdgeInsets.symmetric(horizontal: Style.cellHorizontalPadding), child: list[i]));
       if (i < list.length - 1)
         widgets.add(Container(
           margin: EdgeInsets.symmetric(horizontal: Style.cellHorizontalPadding),
@@ -39,8 +39,7 @@ class CellGroup extends StatelessWidget {
                 padding: Style.cellGroupTitlePadding,
                 child: Text(title,
                     style: TextStyle(
-                        fontSize: Style.cellGroupTitleFontSize,
-                        color: Colors.grey)),
+                        fontSize: Style.cellGroupTitleFontSize)),
               )
             : Container(),
         Container(
@@ -56,7 +55,7 @@ class CellGroup extends StatelessWidget {
                               color: Style.cellBorderColor),
                         )
                       : null,
-                  color: Colors.white),
+                  ),
           child: Column(
             children: buildItems(children),
           ),
